@@ -2,9 +2,17 @@
 * @Author: msi-pc
 * @Date:   2017-11-07 14:49:56
 * @Last Modified by:   msi-pc
-* @Last Modified time: 2017-11-07 14:59:41
+* @Last Modified time: 2017-11-08 12:22:52
 */
 
+
+/**
+ * 把源对象自身的属性（Own Property）扩展到目标对象
+ * @method extend
+ * @param {Any} target 目标对象
+ * @param {Any*} [source] 源对象。若有同名属性，则后者覆盖前者
+ * @return {Any} 目标对象
+ */
 function extend(target) {
 	if (target == null) { throw new Error('target cannot be null'); }
 
@@ -20,6 +28,7 @@ function extend(target) {
 
 	return target;
 }
+
 
 var undefined;
 /**

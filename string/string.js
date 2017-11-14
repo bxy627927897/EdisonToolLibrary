@@ -2,17 +2,17 @@
 * @Author: msi-pc
 * @Date:   2017-11-07 09:57:20
 * @Last Modified by:   msi-pc
-* @Last Modified time: 2017-11-07 15:14:20
+* @Last Modified time: 2017-11-13 17:52:43
 */
 
-/**
- * 把源对象自身的属性（Own Property）扩展到目标对象
- * @method extend
- * @param {Any} target 目标对象
- * @param {Any*} [source] 源对象。若有同名属性，则后者覆盖前者
- * @return {Any} 目标对象
- */
 
+/**
+ * 判断指定字符串是否URL
+ * @method isURL
+ * @param {String} str 指定字符串
+ * @return {String} 指定字符串是否URL
+ */
+function isURL(str) { return /^([a-z]+:)?\/\//i.test(str); }
 
 
 // 大于10000的数字格式化成“x万”
@@ -107,9 +107,44 @@ function formatTopicTime(time) {
 	}
 };
 
+/**
+ * 图片缩放（支持阿里云、七牛图片的缩放）
+ * @method resizeImg
+ * @param {String} url 原图URL
+ * @param {Number} width 缩放宽度（px）
+ * @return {String} 缩放后的URL
+ */
+function resizeImg(url, width) {
+	if (!width || width < 0) { return url; }
+
+	if (/^(?:https?:)?\/\/(qiniu|aliyun)-/i.test(url)) {
+		switch (RegExp.$1.toLowerCase()) {
+			case 'qiniu':
+				// 七牛缩略图处理规则
+				// https://developer.qiniu.com/dora/manual/1279/basic-processing-images-imageview2
+				url = url.replace(/[?\/]imageView2\/.*$/, '');
+				url += (url.indexOf('?') !== -1 ? '/' : '?') +
+					'imageView2/0/w/' + width;
+				break;
+
+			case 'aliyun':
+				// 阿里缩略图处理规则
+				// https://help.aliyun.com/document_detail/44688.html
+				url = url.replace(/[?&]x-oss-process=.*$/, '');
+				url += (url.indexOf('?') !== -1 ? '&' : '?') +
+					'x-oss-process=image/resize,m_lfit,w_' + width;
+				break;
+		}
+	}
+
+	return url;
+};
+
 
 module.exports = {
+	isURL: isURL,
 	toWan: toWan,
 	randomStr: randomStr,
-	formatTopicTime: formatTopicTime
+	formatTopicTime: formatTopicTime,
+	resizeImg: resizeImg
 };

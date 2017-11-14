@@ -1,2 +1,2 @@
 # EdisonToolLibrary
-个人工具函数库
+个人javascript工具函数库
